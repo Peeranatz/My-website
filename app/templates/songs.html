@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Songs</h1>
+<a href="{{ url_for('song.add_song') }}" class="btn btn-success mb-3">Add Song</a>
+<ul class="list-group">
+    {% for song in songs %}
+    <li class="list-group-item">{{ song.title }} by {{ song.artist }} ({{ song.genre }})</li>
+    {% endfor %}
+</ul>
+{% endblock %}

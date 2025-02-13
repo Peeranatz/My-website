@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Profile</h1>
+<p>Username: {{ current_user.username }}</p>
+<h2>Your Playlists</h2>
+<ul class="list-group">
+    {% for playlist in current_user.playlists %}
+    <li class="list-group-item">{{ playlist.name }}</li>
+    {% endfor %}
+</ul>
+{% endblock %}

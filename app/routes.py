@@ -1,9 +1,94 @@
-from flask import render_template
-from flask import Blueprint
+from flask import Blueprint, render_template, redirect, url_for, flash
+from flask_login import login_user, logout_user, login_required, current_user
+from app import db
+from app.models import User, Song, Playlist
+from app.forms import RegistrationForm, LoginForm, SongForm, PlaylistForm
 
-main = Blueprint("main", __name__)
+main_routes = Blueprint("main", __name__)
+auth_routes = Blueprint("auth", __name__)
+song_routes = Blueprint("song", __name__)
+playlist_routes = Blueprint("playlist", __name__)
 
 
-@main.route("/")
-def index():
-    return render_template("index.html")
+@main_routes.route("/")
+def home():
+    return render_template("home.html")
+
+
+@main_routes.route("/about")
+def about():
+    return render_template("about.html")
+
+
+@auth_routes.route("/register", methods=["GET", "POST"])
+def register():
+    form = RegistrationForm()
+    if form.validate_on_submit():
+        user = User(username=form.username.data, password=form.password.data)
+        db.session.add(user)
+        db.session.commit()
+        flash("Registration successful!", "success")
+        return redirect(url_for("auth.login"))
+    return render_template("register.html", form=form)
+
+
+@auth_routes.route("/login", methods=["GET", "POST"])
+def login():
+    form = LoginForm()
+    if form.validate_on_submit():
+        user = User.query.filter_by(username=form.username.data).first()
+        if user and user.password == form.password.data:
+            login_user(user)
+            return redirect(url_for("main.home"))
+        else:
+            flash("Login failed. Check your username and password.", "danger")
+    return render_template("login.html", form=form)
+
+
+@auth_routes.route("/logout")
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for("main.home"))
+
+
+@playlist_routes.route("/playlists")
+@login_required
+def playlists():
+    playlists = Playlist.query.filter_by(user_id=current_user.id).all()
+    return render_template("playlists.html", playlists=playlists)
+
+
+@playlist_routes.route("/create_playlist", methods=["GET", "POST"])
+@login_required
+def create_playlist():
+    form = PlaylistForm()
+    if form.validate_on_submit():
+        playlist = Playlist(name=form.name.data, user_id=current_user.id)
+        db.session.add(playlist)
+        db.session.commit()
+        flash("Playlist created!", "success")
+        return redirect(url_for("playlist.playlists"))
+    return render_template("create_playlist.html", form=form)
+
+
+@song_routes.route("/songs")
+@login_required
+def songs():
+    songs = Song.query.all()
+    return render_template("songs.html", songs=songs)
+
+
+@song_routes.route("/add_song", methods=["GET", "POST"])
+@login_required
+def add_song():
+    form = SongForm()
+    if form.validate_on_submit():
+        song = Song(
+            title=form.title.data, artist=form.artist.data, genre=form.genre.data
+        )
+        db.session.add(song)
+        db.session.commit()
+        flash("Song added!", "success")
+        return redirect(url_for("song.songs"))
+    return render_template("add_song.html", form=form)

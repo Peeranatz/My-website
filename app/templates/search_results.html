@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Search Results</h1>
+<a href="{{ url_for('song.songs') }}" class="btn btn-secondary mb-3">Back to All Songs</a>
+
+<ul class="list-group">
+    {% for song in songs %}
+    <li class="list-group-item">
+        <a href="{{ url_for('song.song_detail', song_id=song.id) }}">
+            {{ song.title }} by {{ song.artist }} ({{ song.genre }})
+        </a>
+    </li>
+    {% else %}
+    <li class="list-group-item">No songs found.</li>
+    {% endfor %}
+</ul>
+{% endblock %}

@@ -100,3 +100,16 @@ def add_to_playlist(song_id):
     db.session.commit()  # บันทึกการเปลี่ยนแปลง
     flash('Song added to playlist!', 'success')  # แสดงข้อความแจ้งเตือน
     return redirect(url_for('song.song_detail', song_id=song_id))  # กลับไปหน้ารายละเอียดเพลง
+
+
+@song_routes.route('/search')
+def search():
+    query = request.args.get('query')  # รับคำค้นหาจาก URL parameter
+    if query:
+        # ค้นหาเพลงโดยใช้ชื่อเพลงหรือศิลปิน
+        songs = Song.query.filter(
+            (Song.title.contains(query)) | (Song.artist.contains(query))
+        ).all()
+    else:
+        songs = Song.query.all()  # ถ้าไม่มีคำค้นหา ให้แสดงเพลงทั้งหมด
+    return render_template('songs.html', songs=songs)

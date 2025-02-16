@@ -4,7 +4,14 @@
 <a href="{{ url_for('playlist.create_playlist') }}" class="btn btn-success mb-3">Create Playlist</a>
 <ul class="list-group">
     {% for playlist in playlists %}
-    <li class="list-group-item">{{ playlist.name }}</li>
+    <li class="list-group-item">
+        <h2>{{ playlist.name }}</h2>
+        <ul>
+            {% for song in playlist.songs %}
+            <li>{{ song.title }} by {{ song.artist }} ({{ song.genre }})</li>
+            {% endfor %}
+        </ul>
+    </li>
     {% endfor %}
 </ul>
 {% endblock %}

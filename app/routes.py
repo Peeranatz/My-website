@@ -88,3 +88,15 @@ def add_song():
 def song_detail(song_id):
     song = Song.query.get_or_404(song_id)
     return render_template('song_detail.html', song=song)
+
+
+@playlist_routes.route('/add_to_playlist/<int:song_id>', methods=['POST'])
+@login_required
+def add_to_playlist(song_id):
+    playlist_id = request.form.get('playlist_id')  # รับค่า playlist_id จากฟอร์ม
+    playlist = Playlist.query.get_or_404(playlist_id)  # ดึงข้อมูลเพลย์ลิสต์จากฐานข้อมูล
+    song = Song.query.get_or_404(song_id)  # ดึงข้อมูลเพลงจากฐานข้อมูล
+    playlist.songs.append(song)  # เพิ่มเพลงลงในเพลย์ลิสต์
+    db.session.commit()  # บันทึกการเปลี่ยนแปลง
+    flash('Song added to playlist!', 'success')  # แสดงข้อความแจ้งเตือน
+    return redirect(url_for('song.song_detail', song_id=song_id))  # กลับไปหน้ารายละเอียดเพลง

@@ -82,3 +82,9 @@ def add_song():
         return redirect(url_for('song.songs'))
     return render_template('add_song.html', form=form)
 
+
+
+@song_routes.route('/song/<int:song_id>')
+def song_detail(song_id):
+    song = Song.query.get_or_404(song_id)
+    return render_template('song_detail.html', song=song)

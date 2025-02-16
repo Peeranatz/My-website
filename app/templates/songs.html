@@ -4,7 +4,11 @@
 <a href="{{ url_for('song.add_song') }}" class="btn btn-success mb-3">Add Song</a>
 <ul class="list-group">
     {% for song in songs %}
-    <li class="list-group-item">{{ song.title }} by {{ song.artist }} ({{ song.genre }})</li>
+    <li class="list-group-item">
+        <a href="{{ url_for('song.song_detail', song_id=song.id) }}">
+            {{ song.title }} by {{ song.artist }} ({{ song.genre }})
+        </a>
+    </li>
     {% endfor %}
 </ul>
 {% endblock %}

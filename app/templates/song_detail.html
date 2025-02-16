@@ -1,0 +1,8 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>{{ song.title }}</h1>
+<p>Artist: {{ song.artist }}</p>
+<p>Genre: {{ song.genre }}</p>
+
+<a href="{{ url_for('song.songs') }}" class="btn btn-secondary">Back to Songs</a>
+{% endblock %}

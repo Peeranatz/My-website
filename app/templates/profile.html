@@ -21,3 +21,16 @@
     {% endfor %}
 </ul>
 {% endblock %}
+
+
+
+<h2>Your Favorite Genre</h2>
+<form method="POST" action="{{ url_for('auth.update_favorite_genre') }}">
+    {{ form.hidden_tag() }}
+    <div class="form-group">
+        {{ form.favorite_genre.label }} {{ form.favorite_genre(class="form-control") }}
+    </div>
+    <div class="form-group">
+        {{ form.submit(class="btn btn-primary") }}
+    </div>
+</form>

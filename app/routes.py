@@ -141,3 +141,10 @@ def recommendations():
         # ถ้าผู้ใช้ยังไม่ได้เลือกประเภทเพลงที่ชอบ ให้แสดงเพลงทั้งหมด
         recommended_songs = Song.query.all()
     return render_template('recommendations.html', songs=recommended_songs)
+
+@auth_routes.route('/profile')
+@login_required
+def profile():
+    from app.forms import FavoriteGenreForm
+    form = FavoriteGenreForm()  # ✅ สร้าง instance ของฟอร์ม
+    return render_template('profile.html', form=form)  # ✅ ส่ง form ไปที่เทมเพลต

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Playlists</h1>
+<h1><strong>Playlists</strong></h1>
 <a href="{{ url_for('playlist.create_playlist') }}" class="btn btn-success mb-3">Create Playlist</a>
 <ul class="list-group">
     {% for playlist in playlists %}

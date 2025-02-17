@@ -1,8 +1,9 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, redirect, url_for, flash, request  # ลบ FavoriteGenreForm ออกจากนี้
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models import User, Song, Playlist
-from app.forms import RegistrationForm, LoginForm, SongForm, PlaylistForm
+from app.forms import RegistrationForm, LoginForm, SongForm, PlaylistForm, FavoriteGenreForm  # เพิ่ม FavoriteGenreForm ที่นี่
+
 
 main_routes = Blueprint('main', __name__)
 auth_routes = Blueprint('auth', __name__)
@@ -113,3 +114,30 @@ def search():
     else:
         songs = Song.query.all()  # ถ้าไม่มีคำค้นหา ให้แสดงเพลงทั้งหมด
     return render_template('songs.html', songs=songs)
+
+
+
+@auth_routes.route('/update_favorite_genre', methods=['GET', 'POST'])
+@login_required
+def update_favorite_genre():
+    form = FavoriteGenreForm()
+    if form.validate_on_submit():
+        current_user.favorite_genre = form.favorite_genre.data
+        db.session.commit()
+        flash('Favorite genre updated!', 'success')
+        return redirect(url_for('auth.profile'))
+    return render_template('profile.html', form=form)
+
+
+
+
+@song_routes.route('/recommendations')
+@login_required
+def recommendations():
+    if current_user.favorite_genre:
+        # แนะนำเพลงตามประเภทเพลงที่ผู้ใช้ชอบ
+        recommended_songs = Song.query.filter_by(genre=current_user.favorite_genre).all()
+    else:
+        # ถ้าผู้ใช้ยังไม่ได้เลือกประเภทเพลงที่ชอบ ให้แสดงเพลงทั้งหมด
+        recommended_songs = Song.query.all()
+    return render_template('recommendations.html', songs=recommended_songs)

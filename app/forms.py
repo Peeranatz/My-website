@@ -22,3 +22,7 @@ class PlaylistForm(FlaskForm):
     name = StringField('Playlist Name', validators=[DataRequired()])
     submit = SubmitField('Create Playlist')
 
+
+class FavoriteGenreForm(FlaskForm):
+    favorite_genre = StringField('Favorite Genre', validators=[DataRequired()])
+    submit = SubmitField('Save')

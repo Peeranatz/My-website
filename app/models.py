@@ -5,11 +5,7 @@ from flask_login import UserMixin
 def load_user(user_id):
     return User.query.get(int(user_id))
 
-class User(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    password = db.Column(db.String(100), nullable=False)
-    playlists = db.relationship('Playlist', backref='user', lazy=True)
+
 
 class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -23,3 +19,13 @@ class Playlist(db.Model):
     name = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     songs = db.relationship('Song', backref='playlist', lazy=True)
+
+
+
+class User(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    password = db.Column(db.String(100), nullable=False)
+    favorite_genre = db.Column(db.String(50))  # เพิ่มฟิลด์นี้
+    playlists = db.relationship('Playlist', backref='user', lazy=True)
+    

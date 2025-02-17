@@ -1,0 +1,20 @@
+/* เพิ่ม animation สำหรับการโหลดหน้าเว็บ */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+.fade-in {
+    animation: fadeIn 1s ease-in-out;
+}
+
+/* เพิ่ม effect สำหรับปุ่ม */
+.btn-hover-effect:hover {
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
+}

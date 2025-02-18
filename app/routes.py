@@ -30,11 +30,19 @@ def about():
 def register():
     form = RegistrationForm()
     if form.validate_on_submit():
+        # ตรวจสอบว่ารหัสผ่านตรงกัน (อันนี้จริงๆ ไม่จำเป็นเพราะ EqualTo จัดการให้แล้ว)
+        if form.password.data != form.confirm_password.data:
+            flash("Passwords do not match!", "danger")
+            return redirect(url_for('auth.register'))
+
+        # เพิ่มผู้ใช้ลง Database
         user = User(username=form.username.data, password=form.password.data)
         db.session.add(user)
         db.session.commit()
-        flash('Registration successful!', 'success')
+
+        flash("Registration successful! You can now log in.", "success")
         return redirect(url_for('auth.login'))
+
     return render_template('register.html', form=form)
 
 @auth_routes.route('/login', methods=['GET', 'POST'])

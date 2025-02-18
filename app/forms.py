@@ -20,6 +20,7 @@ class SongForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired()])
     artist = StringField('Artist', validators=[DataRequired()])
     genre = StringField('Genre', validators=[DataRequired()])
+    image_url = StringField('Image URL')  # เพิ่มฟิลด์นี้
     submit = SubmitField('Add Song')
 
 class PlaylistForm(FlaskForm):
@@ -30,3 +31,6 @@ class PlaylistForm(FlaskForm):
 class FavoriteGenreForm(FlaskForm):
     favorite_genre = StringField('Favorite Genre', validators=[DataRequired()])
     submit = SubmitField('Save')
+
+
+

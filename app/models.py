@@ -13,6 +13,8 @@ class Song(db.Model):
     artist = db.Column(db.String(100), nullable=False)
     genre = db.Column(db.String(50), nullable=False)
     playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.id'))
+    image_url = db.Column(db.String(255))  # ตรวจสอบว่ามี image_url หรือไม่
+
 
 class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -29,3 +31,5 @@ class User(db.Model, UserMixin):
     favorite_genre = db.Column(db.String(50))  # เพิ่มฟิลด์นี้
     playlists = db.relationship('Playlist', backref='user', lazy=True)
     
+
+

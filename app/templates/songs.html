@@ -1,28 +1,34 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="container">
-    <h1 class="my-4"><strong>Songs</strong></h1>
-    <a href="{{ url_for('song.add_song') }}" class="btn btn-success mb-3">Add Song</a>
+<h1>Songs</h1>
+<a href="{{ url_for('song.add_song') }}" class="btn btn-success mb-3">Add Song</a>
 
-    <!-- เพิ่มฟอร์มค้นหา -->
-    <form method="GET" action="{{ url_for('song.search') }}" class="mb-4">
-        <div class="input-group">
-            <input type="text" name="query" class="form-control" placeholder="Search by song title or artist">
-            <button type="submit" class="btn btn-primary">Search</button>
-        </div>
-    </form>
-
-    <!-- แสดงรายการเพลง -->
-    <div class="list-group">
-        {% for song in songs %}
-        <a href="{{ url_for('song.song_detail', song_id=song.id) }}" class="list-group-item list-group-item-action">
-            <div class="d-flex w-100 justify-content-between">
-                <h5 class="mb-1">{{ song.title }}</h5>
-                <small>{{ song.genre }}</small>
-            </div>
-            <p class="mb-1">{{ song.artist }}</p>
-        </a>
-        {% endfor %}
+<!-- เพิ่มฟอร์มค้นหา -->
+<form method="GET" action="{{ url_for('song.search') }}" class="mb-3">
+    <div class="input-group">
+        <input type="text" name="query" class="form-control" placeholder="Search by song title or artist">
+        <button type="submit" class="btn btn-primary">Search</button>
     </div>
-</div>
+</form>
+
+<ul class="list-group">
+    {% for song in songs %}
+    <li class="list-group-item">
+        <div class="row">
+            <div class="col-md-2">
+                {% if song.image_url %}
+                <img src="{{ song.image_url }}" alt="{{ song.title }}" class="img-fluid">
+                {% else %}
+                <div class="placeholder-image"></div>
+                {% endif %}
+            </div>
+            <div class="col-md-10">
+                <a href="{{ url_for('song.song_detail', song_id=song.id) }}">
+                    {{ song.title }} by {{ song.artist }} ({{ song.genre }})
+                </a>
+            </div>
+        </div>
+    </li>
+    {% endfor %}
+</ul>
 {% endblock %}

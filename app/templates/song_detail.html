@@ -1,18 +1,19 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>{{ song.title }}</h1>
-<p>Artist: {{ song.artist }}</p>
-<p>Genre: {{ song.genre }}</p>
-
-<h2>Add to Playlist</h2>
-<form method="POST" action="{{ url_for('playlist.add_to_playlist', song_id=song.id) }}">
-    <select name="playlist_id">
-        {% for playlist in current_user.playlists %}
-        <option value="{{ playlist.id }}">{{ playlist.name }}</option>
-        {% endfor %}
-    </select>
-    <button type="submit" class="btn btn-primary">Add to Playlist</button>
-</form>
-
-<a href="{{ url_for('song.songs') }}" class="btn btn-secondary">Back to Songs</a>
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-4">
+            {% if song.image_url %}
+            <img src="{{ song.image_url }}" alt="{{ song.title }}" class="img-fluid">
+            {% else %}
+            <div class="placeholder-image"></div>
+            {% endif %}
+        </div>
+        <div class="col-md-8">
+            <h1>{{ song.title }}</h1>
+            <p class="lead">{{ song.artist }}</p>
+            <p><strong>Genre:</strong> {{ song.genre }}</p>
+        </div>
+    </div>
+</div>
 {% endblock %}

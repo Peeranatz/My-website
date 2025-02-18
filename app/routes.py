@@ -20,7 +20,9 @@ def index():
 @main_routes.route('/home')
 @login_required
 def home():
-    return render_template('home.html')
+    # ดึงเพลงทั้งหมดจาก database
+    songs = Song.query.all()
+    return render_template('home.html', songs=songs)
 
 @main_routes.route('/about')
 def about():

@@ -1,16 +1,24 @@
-from flask import Blueprint, render_template, redirect, url_for, flash, request  # ลบ FavoriteGenreForm ออกจากนี้
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from flask_login import login_user, logout_user, login_required, current_user
 from app import db
 from app.models import User, Song, Playlist
-from app.forms import RegistrationForm, LoginForm, SongForm, PlaylistForm, FavoriteGenreForm  # เพิ่ม FavoriteGenreForm ที่นี่
-
+from app.forms import RegistrationForm, LoginForm, SongForm, PlaylistForm, FavoriteGenreForm
 
 main_routes = Blueprint('main', __name__)
 auth_routes = Blueprint('auth', __name__)
 song_routes = Blueprint('song', __name__)
 playlist_routes = Blueprint('playlist', __name__)
 
+# ทำให้หน้าแรก Redirect ไปหน้า Login
 @main_routes.route('/')
+def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('main.home'))  # ถ้า Login แล้วไปหน้า Home
+    return redirect(url_for('auth.login'))  # ถ้ายังไม่ได้ Login ไปที่หน้า Login
+
+# หน้า Home (ต้อง Login ก่อน)
+@main_routes.route('/home')
+@login_required
 def home():
     return render_template('home.html')
 
@@ -36,7 +44,8 @@ def login():
         user = User.query.filter_by(username=form.username.data).first()
         if user and user.password == form.password.data:
             login_user(user)
-            return redirect(url_for('main.home'))
+            flash('Login successful!', 'success')
+            return redirect(url_for('main.home'))  # Login แล้วไปหน้า Home
         else:
             flash('Login failed. Check your username and password.', 'danger')
     return render_template('login.html', form=form)
@@ -45,7 +54,8 @@ def login():
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('main.home'))
+    flash('You have been logged out.', 'info')
+    return redirect(url_for('auth.login'))  # Logout แล้วกลับไปหน้า Login
 
 @playlist_routes.route('/playlists')
 @login_required
@@ -83,39 +93,32 @@ def add_song():
         return redirect(url_for('song.songs'))
     return render_template('add_song.html', form=form)
 
-
-
 @song_routes.route('/song/<int:song_id>')
 def song_detail(song_id):
     song = Song.query.get_or_404(song_id)
     return render_template('song_detail.html', song=song)
 
-
 @playlist_routes.route('/add_to_playlist/<int:song_id>', methods=['POST'])
 @login_required
 def add_to_playlist(song_id):
-    playlist_id = request.form.get('playlist_id')  # รับค่า playlist_id จากฟอร์ม
-    playlist = Playlist.query.get_or_404(playlist_id)  # ดึงข้อมูลเพลย์ลิสต์จากฐานข้อมูล
-    song = Song.query.get_or_404(song_id)  # ดึงข้อมูลเพลงจากฐานข้อมูล
-    playlist.songs.append(song)  # เพิ่มเพลงลงในเพลย์ลิสต์
-    db.session.commit()  # บันทึกการเปลี่ยนแปลง
-    flash('Song added to playlist!', 'success')  # แสดงข้อความแจ้งเตือน
-    return redirect(url_for('song.song_detail', song_id=song_id))  # กลับไปหน้ารายละเอียดเพลง
-
+    playlist_id = request.form.get('playlist_id')
+    playlist = Playlist.query.get_or_404(playlist_id)
+    song = Song.query.get_or_404(song_id)
+    playlist.songs.append(song)
+    db.session.commit()
+    flash('Song added to playlist!', 'success')
+    return redirect(url_for('song.song_detail', song_id=song_id))
 
 @song_routes.route('/search')
 def search():
-    query = request.args.get('query')  # รับคำค้นหาจาก URL parameter
+    query = request.args.get('query')
     if query:
-        # ค้นหาเพลงโดยใช้ชื่อเพลงหรือศิลปิน
         songs = Song.query.filter(
             (Song.title.contains(query)) | (Song.artist.contains(query))
         ).all()
     else:
-        songs = Song.query.all()  # ถ้าไม่มีคำค้นหา ให้แสดงเพลงทั้งหมด
+        songs = Song.query.all()
     return render_template('songs.html', songs=songs)
-
-
 
 @auth_routes.route('/update_favorite_genre', methods=['GET', 'POST'])
 @login_required
@@ -128,23 +131,17 @@ def update_favorite_genre():
         return redirect(url_for('auth.profile'))
     return render_template('profile.html', form=form)
 
-
-
-
 @song_routes.route('/recommendations')
 @login_required
 def recommendations():
     if current_user.favorite_genre:
-        # แนะนำเพลงตามประเภทเพลงที่ผู้ใช้ชอบ
         recommended_songs = Song.query.filter_by(genre=current_user.favorite_genre).all()
     else:
-        # ถ้าผู้ใช้ยังไม่ได้เลือกประเภทเพลงที่ชอบ ให้แสดงเพลงทั้งหมด
         recommended_songs = Song.query.all()
     return render_template('recommendations.html', songs=recommended_songs)
 
 @auth_routes.route('/profile')
 @login_required
 def profile():
-    from app.forms import FavoriteGenreForm
-    form = FavoriteGenreForm()  # ✅ สร้าง instance ของฟอร์ม
-    return render_template('profile.html', form=form)  # ✅ ส่ง form ไปที่เทมเพลต
+    form = FavoriteGenreForm()
+    return render_template('profile.html', form=form)

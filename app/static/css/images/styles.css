@@ -1,20 +1,24 @@
-/* เพิ่ม animation สำหรับการโหลดหน้าเว็บ */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-
-    to {
-        opacity: 1;
-    }
+/* ทำให้ footer อยู่ด้านล่างสุดของหน้าเว็บ */
+html,
+body {
+    height: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
 }
 
-.fade-in {
-    animation: fadeIn 1s ease-in-out;
+.container {
+    flex: 1;
 }
 
-/* เพิ่ม effect สำหรับปุ่ม */
-.btn-hover-effect:hover {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
+footer {
+    flex-shrink: 0;
+    background-color: #343a40;
+    /* สีพื้นหลังของ footer */
+    color: white;
+    /* สีข้อความของ footer */
+    padding: 20px 0;
+    /* ระยะห่างภายใน footer */
+    text-align: center;
+    /* จัดข้อความให้อยู่กลาง */
 }

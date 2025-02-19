@@ -74,6 +74,7 @@ def playlists():
     return render_template('playlists.html', playlists=playlists)
 
 @playlist_routes.route('/create_playlist', methods=['GET', 'POST'])
+
 @login_required
 def create_playlist():
     form = PlaylistForm()

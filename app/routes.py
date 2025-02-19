@@ -74,7 +74,6 @@ def playlists():
     return render_template('playlists.html', playlists=playlists)
 
 @playlist_routes.route('/create_playlist', methods=['GET', 'POST'])
-
 @login_required
 def create_playlist():
     form = PlaylistForm()
@@ -118,8 +117,8 @@ def add_to_playlist(song_id):
     playlist.songs.append(song)
     db.session.commit()
     flash('Song added to playlist!', 'success')
-    return redirect(url_for('song.song_detail', song_id=song_id))
-
+    
+    return songs()
 @song_routes.route('/search')
 def search():
     query = request.args.get('query')

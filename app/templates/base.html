@@ -12,35 +12,40 @@
 
 <body>
     <!-- Navbar -->
-    <nav class="navbar navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar"
-                aria-controls="sidebar">
+            <button class="btn btn-outline-light sidebar-toggle" type="button" data-bs-toggle="offcanvas"
+                data-bs-target="#sidebar" aria-controls="sidebar">
                 ☰
             </button>
-            <a class="navbar-brand" href="{{ url_for('main.home') }}">Music Record</a>
+            <a class="navbar-brand mx-auto" href="{{ url_for('main.home') }}">🎵 Music Record</a>
         </div>
     </nav>
 
     <!-- Sidebar -->
-    <div class="offcanvas offcanvas-start bg-dark text-white" tabindex="-1" id="sidebar">
+    <div class="offcanvas offcanvas-start bg-dark text-white sidebar-menu" tabindex="-1" id="sidebar">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">Menu</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
         </div>
         <div class="offcanvas-body">
             <ul class="nav flex-column">
-                <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('main.home') }}">Home</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('main.about') }}">About</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('song.songs') }}">Songs</a></li>
-                <li class="nav-item"><a class="nav-link text-white"
-                        href="{{ url_for('playlist.playlists') }}">Playlists</a></li>
-                <li class="nav-item"><a class="nav-link text-white"
-                        href="{{ url_for('song.recommendations') }}">Recommendations</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('auth.profile') }}">Profile</a>
-                </li>
-                <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('auth.login') }}">Login</a></li>
-                <li class="nav-item"><a class="nav-link text-white" href="{{ url_for('auth.logout') }}">Logout</a></li>
+                <li class="nav-item"><a class="nav-link text-white hover-menu" href="{{ url_for('main.home') }}">🏠
+                        Home</a></li>
+                <li class="nav-item"><a class="nav-link text-white hover-menu" href="{{ url_for('main.about') }}">ℹ️
+                        About</a></li>
+                <li class="nav-item"><a class="nav-link text-white hover-menu" href="{{ url_for('song.songs') }}">🎵
+                        Songs</a></li>
+                <li class="nav-item"><a class="nav-link text-white hover-menu"
+                        href="{{ url_for('playlist.playlists') }}">📀 Playlists</a></li>
+                <li class="nav-item"><a class="nav-link text-white hover-menu"
+                        href="{{ url_for('song.recommendations') }}">💡 Recommendations</a></li>
+                <li class="nav-item"><a class="nav-link text-white hover-menu" href="{{ url_for('auth.profile') }}">👤
+                        Profile</a></li>
+                <li class="nav-item"><a class="nav-link text-white hover-menu" href="{{ url_for('auth.login') }}">🔑
+                        Login</a></li>
+                <li class="nav-item"><a class="nav-link text-white hover-menu" href="{{ url_for('auth.logout') }}">🚪
+                        Logout</a></li>
             </ul>
         </div>
     </div>
@@ -51,8 +56,8 @@
     </div>
 
     <!-- Footer -->
-    <footer class="bg-dark text-white mt-4">
-        <div class="container py-4 text-center">
+    <footer class="bg-dark text-white mt-4 text-center">
+        <div class="container py-4">
             <p>&copy; 2025 Music Record | Discover and Manage Your Music</p>
         </div>
     </footer>

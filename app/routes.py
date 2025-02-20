@@ -117,8 +117,9 @@ def add_to_playlist(song_id):
     playlist.songs.append(song)
     db.session.commit()
     flash('Song added to playlist!', 'success')
-    
     return songs()
+
+
 @song_routes.route('/search')
 def search():
     query = request.args.get('query')

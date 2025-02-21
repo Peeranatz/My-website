@@ -20,8 +20,9 @@ def index():
 @main_routes.route('/home')
 @login_required
 def home():
-    # ดึงเพลงทั้งหมดจาก database
-    songs = Song.query.all()
+    page = request.args.get('page', 1, type=int)  # ดึงค่าหน้าปัจจุบันจาก URL
+    per_page = 10  # จำนวนเพลงต่อหน้า
+    songs = Song.query.paginate(page=page, per_page=per_page, error_out=False)  # ใช้ Pagination
     return render_template('home.html', songs=songs)
 
 @main_routes.route('/about')

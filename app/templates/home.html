@@ -9,19 +9,21 @@
 
     <div class="music-grid">
         {% for song in songs %}
-        <div class="music-card">
-            <div class="music-card-image">
-                {% if song.image_url %}
-                <img src="{{ song.image_url }}" alt="{{ song.title }}">
-                {% else %}
-                <div class="placeholder-image"></div>
-                {% endif %}
+        <a href="{{ url_for('song.song_detail', song_id=song.id) }}" class="music-card-link"> <!-- เพิ่มลิงก์นี้ -->
+            <div class="music-card">
+                <div class="music-card-image">
+                    {% if song.image_url %}
+                    <img src="{{ song.image_url }}" alt="{{ song.title }}">
+                    {% else %}
+                    <div class="placeholder-image"></div>
+                    {% endif %}
+                </div>
+                <div class="music-card-content">
+                    <h5 class="song-title">{{ song.title }}</h5>
+                    <p class="artist-name">{{ song.artist }}</p>
+                </div>
             </div>
-            <div class="music-card-content">
-                <h5 class="song-title">{{ song.title }}</h5>
-                <p class="artist-name">{{ song.artist }}</p>
-            </div>
-        </div>
+        </a> <!-- ปิดลิงก์นี้ -->
         {% endfor %}
     </div>
 </div>
@@ -79,6 +81,14 @@
         margin: 4px 0 0;
         font-size: 0.9rem;
         color: #666;
+    }
+
+    /* เพิ่มสไตล์สำหรับลิงก์ */
+    .music-card-link {
+        text-decoration: none;
+        /* ลบขีดเส้นใต้ */
+        color: inherit;
+        /* สืบทอดสีข้อความ */
     }
 </style>
 {% endblock %}

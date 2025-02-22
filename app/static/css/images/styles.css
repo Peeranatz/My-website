@@ -74,3 +74,60 @@
 .song-card .btn:hover {
     background: #e52e71;
 }
+
+/* 🎵 ปรับ UI หน้า Profile */
+.profile-container {
+    max-width: 600px;
+    margin: 0 auto;
+    background: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.profile-container h1 {
+    font-size: 28px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.profile-container input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 15px;
+    font-size: 16px;
+}
+
+.profile-container .btn-save {
+    background: #ff8a00;
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    font-weight: bold;
+    transition: background 0.3s;
+}
+
+.profile-container .btn-save:hover {
+    background: #e52e71;
+}
+
+/* 🎵 ปรับ UI Playlists */
+.playlist-container {
+    margin-top: 20px;
+}
+
+.playlist-item {
+    background: #f8f9fa;
+    padding: 10px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s;
+}
+
+.playlist-item:hover {
+    transform: scale(1.02);
+    background: #e9ecef;
+}

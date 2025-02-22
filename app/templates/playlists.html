@@ -3,6 +3,18 @@
 {% block content %}
 <h1><strong>Your Playlists</strong></h1>
 
+<!-- แสดงข้อความแจ้งเตือน -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
 <!-- ปุ่มสร้าง Playlist -->
 <a href="{{ url_for('playlist.create_playlist') }}" class="btn btn-success mb-3">Create Playlist</a>
 
@@ -20,7 +32,7 @@
         </ul>
 
         <!-- ฟอร์มเพิ่มเพลงลง Playlist -->
-        <form action="{{ url_for('playlist.add_to_playlist', playlist_id=playlist.id) }}" method="POST">
+        <form action="{{ url_for('playlist.add_song_to_playlist', playlist_id=playlist.id) }}" method="POST">
             <div class="form-group">
                 <label for="song_id">Select Song:</label>
                 <select name="song_id" class="form-control">

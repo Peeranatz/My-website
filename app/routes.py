@@ -72,7 +72,8 @@ def logout():
 @login_required
 def playlists():
     playlists = Playlist.query.filter_by(user_id=current_user.id).all()
-    return render_template('playlists.html', playlists=playlists)
+    all_songs = Song.query.all()  # ดึงข้อมูลเพลงทั้งหมด
+    return render_template('playlists.html', playlists=playlists, all_songs=all_songs)
 
 @playlist_routes.route('/create_playlist', methods=['GET', 'POST'])
 @login_required
@@ -109,6 +110,7 @@ def song_detail(song_id):
     song = Song.query.get_or_404(song_id)
     return render_template('song_detail.html', song=song)
 
+# Route สำหรับเพิ่มเพลงจากหน้าเพลง (songs.html)
 @playlist_routes.route('/add_to_playlist/<int:song_id>', methods=['POST'])
 @login_required
 def add_to_playlist(song_id):
@@ -118,16 +120,37 @@ def add_to_playlist(song_id):
         song = Song.query.get_or_404(song_id)
         
         if playlist.user_id != current_user.id:
-            flash('You do not have permission to add songs to this playlist.', 'danger')
+            flash('ไม่อนุญาตให้เพิ่มเพลงในเพลย์ลิสต์นี้', 'danger')
             return redirect(url_for('song.songs'))
         
         playlist.songs.append(song)
         db.session.commit()
-        flash('Song added to playlist!', 'success')
+        flash('เพิ่มเพลงลงเพลย์ลิสต์สำเร็จ!', 'success')
     except Exception as e:
         db.session.rollback()
-        flash('An error occurred. Please try again.', 'danger')
+        flash('เกิดข้อผิดพลาด กรุณาลองอีกครั้ง', 'danger')
     return redirect(url_for('song.songs'))
+
+# Route ใหม่สำหรับเพิ่มเพลงจากหน้าเพลย์ลิสต์ (playlists.html)
+@playlist_routes.route('/add_song_to_playlist/<int:playlist_id>', methods=['POST'])
+@login_required
+def add_song_to_playlist(playlist_id):
+    try:
+        song_id = request.form.get('song_id')
+        playlist = Playlist.query.get_or_404(playlist_id)
+        song = Song.query.get_or_404(song_id)
+        
+        if playlist.user_id != current_user.id:
+            flash('ไม่อนุญาตให้เพิ่มเพลงในเพลย์ลิสต์นี้', 'danger')
+            return redirect(url_for('playlist.playlists'))
+        
+        playlist.songs.append(song)
+        db.session.commit()
+        flash('เพิ่มเพลงลงเพลย์ลิสต์สำเร็จ!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('เกิดข้อผิดพลาด กรุณาลองอีกครั้ง', 'danger')
+    return redirect(url_for('playlist.playlists'))
 
 @song_routes.route('/search')
 def search():
@@ -165,7 +188,6 @@ def recommendations():
 def profile():
     form = FavoriteGenreForm()
     return render_template('profile.html', form=form)
-
 
 @playlist_routes.route('/delete_playlist/<int:playlist_id>', methods=['POST'])
 @login_required

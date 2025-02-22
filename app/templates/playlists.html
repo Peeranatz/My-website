@@ -1,16 +1,43 @@
 {% extends "base.html" %}
+
 {% block content %}
-<h1><strong>Playlists</strong></h1>
+<h1><strong>Your Playlists</strong></h1>
+
+<!-- ปุ่มสร้าง Playlist -->
 <a href="{{ url_for('playlist.create_playlist') }}" class="btn btn-success mb-3">Create Playlist</a>
+
 <ul class="list-group">
     {% for playlist in playlists %}
     <li class="list-group-item">
         <h2>{{ playlist.name }}</h2>
+        <p>Created by: {{ playlist.user.username }}</p>
+
+        <!-- รายการเพลงใน Playlist -->
         <ul>
             {% for song in playlist.songs %}
             <li>{{ song.title }} by {{ song.artist }} ({{ song.genre }})</li>
             {% endfor %}
         </ul>
+
+        <!-- ฟอร์มเพิ่มเพลงลง Playlist -->
+        <form action="{{ url_for('playlist.add_to_playlist', playlist_id=playlist.id) }}" method="POST">
+            <div class="form-group">
+                <label for="song_id">Select Song:</label>
+                <select name="song_id" class="form-control">
+                    {% for song in all_songs %}
+                    <option value="{{ song.id }}">{{ song.title }} - {{ song.artist }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary btn-sm mt-2">Add Song</button>
+        </form>
+
+        <!-- ปุ่มลบ Playlist -->
+        <form action="{{ url_for('playlist.delete_playlist', playlist_id=playlist.id) }}" method="POST"
+            style="display:inline;">
+            <button type="submit" class="btn btn-danger btn-sm mt-2">Delete Playlist</button>
+        </form>
+
     </li>
     {% endfor %}
 </ul>

@@ -1,34 +1,61 @@
 {% extends "base.html" %}
 {% block content %}
 <h1>Songs</h1>
-<a href="{{ url_for('song.add_song') }}" class="btn btn-success mb-3">Add Song</a>
 
-<!-- เพิ่มฟอร์มค้นหา -->
-<form method="GET" action="{{ url_for('song.search') }}" class="mb-3">
-    <div class="input-group">
-        <input type="text" name="query" class="form-control" placeholder="Search by song title or artist">
-        <button type="submit" class="btn btn-primary">Search</button>
+<!-- แสดงข้อความแจ้งเตือน -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+{% if messages %}
+{% for category, message in messages %}
+<div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+    {{ message }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+{% endwith %}
+
+<!-- ปุ่มเพิ่มเพลงและฟอร์มค้นหา -->
+<div class="row mb-3">
+    <div class="col-md-6">
+        <a href="{{ url_for('song.add_song') }}" class="btn btn-success">Add Song</a>
     </div>
-</form>
+    <div class="col-md-6">
+        <form method="GET" action="{{ url_for('song.search') }}" class="input-group">
+            <input type="text" name="query" class="form-control" placeholder="Search by song title or artist">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
 
-<ul class="list-group">
-    {% for song in songs %}
-    <li class="list-group-item">
-        <div class="row">
-            <div class="col-md-2">
+<!-- ตารางแสดงเพลง -->
+{% if songs %}
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">Image</th>
+            <th scope="col">Song Details</th>
+            <th scope="col">Add to Playlist</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for song in songs %}
+        <tr>
+            <td>
                 {% if song.image_url %}
-                <img src="{{ song.image_url }}" alt="{{ song.title }}" class="img-fluid">
+                <img src="{{ song.image_url }}" alt="{{ song.title }}" class="img-fluid" style="max-width: 100px;">
                 {% else %}
-                <div class="placeholder-image"></div>
+                <div class="placeholder-image bg-light d-flex align-items-center justify-content-center text-secondary">
+                    No Image
+                </div>
                 {% endif %}
-            </div>
-            <div class="col-md-8">
+            </td>
+            <td>
                 <a href="{{ url_for('song.song_detail', song_id=song.id) }}">
                     {{ song.title }} by {{ song.artist }} ({{ song.genre }})
                 </a>
-            </div>
-            <div class="col-md-2">
-                <!-- เพิ่มฟีเจอร์ "เพิ่มเพลงไปในเพลย์ลิสต์" -->
+            </td>
+            <td>
+                {% if current_user.playlists %}
                 <form method="POST" action="{{ url_for('playlist.add_to_playlist', song_id=song.id) }}">
                     <select name="playlist_id" class="form-select mb-2">
                         {% for playlist in current_user.playlists %}
@@ -37,9 +64,19 @@
                     </select>
                     <button type="submit" class="btn btn-primary btn-sm">Add to Playlist</button>
                 </form>
-            </div>
-        </div>
-    </li>
-    {% endfor %}
-</ul>
+                {% else %}
+                <div class="alert alert-warning" role="alert">
+                    You have no playlists. <a href="{{ url_for('playlist.create_playlist') }}">Create one first.</a>
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info" role="alert">
+    No songs found.
+</div>
+{% endif %}
 {% endblock %}

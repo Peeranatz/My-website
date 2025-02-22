@@ -7,29 +7,35 @@ def load_user(user_id):
 
 
 
+# ประกาศตารางกลางก่อน
+playlist_song = db.Table('playlist_song',
+    db.Column('playlist_id', db.Integer, db.ForeignKey('playlist.id'), primary_key=True),
+    db.Column('song_id', db.Integer, db.ForeignKey('song.id'), primary_key=True)
+)
+
 class Song(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     artist = db.Column(db.String(100), nullable=False)
     genre = db.Column(db.String(50), nullable=False)
-    playlist_id = db.Column(db.Integer, db.ForeignKey('playlist.id'))
-    image_url = db.Column(db.String(255))  # ตรวจสอบว่ามี image_url หรือไม่
+    image_url = db.Column(db.String(255))  # URL รูปภาพของเพลง
 
+    # ความสัมพันธ์หลายต่อหลายกับ Playlist
+    playlists = db.relationship('Playlist', secondary=playlist_song, back_populates='songs')
 
 class Playlist(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-    songs = db.relationship('Song', backref='playlist', lazy=True)
-
-
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    
+    # ความสัมพันธ์หลายต่อหลายกับ Song
+    songs = db.relationship('Song', secondary=playlist_song, back_populates='playlists')
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)
-    favorite_genre = db.Column(db.String(50))  # เพิ่มฟิลด์นี้
-    playlists = db.relationship('Playlist', backref='user', lazy=True)
+    favorite_genre = db.Column(db.String(50))  # เพิ่มฟิลด์แนวเพลงที่ชอบ
     
-
-
+    # ความสัมพันธ์กับ Playlist
+    playlists = db.relationship('Playlist', backref='user', lazy=True)

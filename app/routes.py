@@ -112,14 +112,22 @@ def song_detail(song_id):
 @playlist_routes.route('/add_to_playlist/<int:song_id>', methods=['POST'])
 @login_required
 def add_to_playlist(song_id):
-    playlist_id = request.form.get('playlist_id')
-    playlist = Playlist.query.get_or_404(playlist_id)
-    song = Song.query.get_or_404(song_id)
-    playlist.songs.append(song)
-    db.session.commit()
-    flash('Song added to playlist!', 'success')
-    return songs()
-
+    try:
+        playlist_id = request.form.get('playlist_id')
+        playlist = Playlist.query.get_or_404(playlist_id)
+        song = Song.query.get_or_404(song_id)
+        
+        if playlist.user_id != current_user.id:
+            flash('You do not have permission to add songs to this playlist.', 'danger')
+            return redirect(url_for('song.songs'))
+        
+        playlist.songs.append(song)
+        db.session.commit()
+        flash('Song added to playlist!', 'success')
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred. Please try again.', 'danger')
+    return redirect(url_for('song.songs'))
 
 @song_routes.route('/search')
 def search():
@@ -157,3 +165,20 @@ def recommendations():
 def profile():
     form = FavoriteGenreForm()
     return render_template('profile.html', form=form)
+
+
+@playlist_routes.route('/delete_playlist/<int:playlist_id>', methods=['POST'])
+@login_required
+def delete_playlist(playlist_id):
+    playlist = Playlist.query.get_or_404(playlist_id)
+    
+    # ตรวจสอบว่าเพลย์ลิสต์เป็นของผู้ใช้ปัจจุบันหรือไม่
+    if playlist.user_id != current_user.id:
+        flash('You do not have permission to delete this playlist.', 'danger')
+        return redirect(url_for('playlist.playlists'))
+    
+    # ลบเพลย์ลิสต์
+    db.session.delete(playlist)
+    db.session.commit()
+    flash('Playlist deleted successfully!', 'success')
+    return redirect(url_for('playlist.playlists'))

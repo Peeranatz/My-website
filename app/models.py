@@ -3,9 +3,8 @@ from flask_login import UserMixin
 
 @login_manager.user_loader
 def load_user(user_id):
+    """Load user by ID."""
     return User.query.get(int(user_id))
-
-
 
 # ประกาศตารางกลางก่อน
 playlist_song = db.Table('playlist_song',
@@ -14,6 +13,7 @@ playlist_song = db.Table('playlist_song',
 )
 
 class Song(db.Model):
+    """Song model."""
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(100), nullable=False)
     artist = db.Column(db.String(100), nullable=False)
@@ -24,6 +24,7 @@ class Song(db.Model):
     playlists = db.relationship('Playlist', secondary=playlist_song, back_populates='songs')
 
 class Playlist(db.Model):
+    """Playlist model."""
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
@@ -32,6 +33,7 @@ class Playlist(db.Model):
     songs = db.relationship('Song', secondary=playlist_song, back_populates='playlists')
 
 class User(db.Model, UserMixin):
+    """User model."""
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(50), unique=True, nullable=False)
     password = db.Column(db.String(100), nullable=False)

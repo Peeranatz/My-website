@@ -1,6 +1,27 @@
-/* 🎵 ปรับ Sidebar ให้ดูดีขึ้น */
+/* 🎵 CSS Variables */
+:root {
+    --primary-color: #ff8a00;
+    --secondary-color: #e52e71;
+    --background-color: #f8f9fa;
+    --text-color: #333;
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* 🎵 Global Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    margin: 0;
+    padding: 0;
+}
+
+/* 🎵 Sidebar */
 .sidebar-menu {
     width: 250px;
+    background-color: #343a40;
+    color: white;
+    padding: 10px;
 }
 
 .hover-menu {
@@ -14,13 +35,13 @@
     transform: scale(1.05);
 }
 
-/* 🎵 ปรับ UI ให้ Song Cards */
+/* 🎵 Song Cards */
 .song-card {
     position: relative;
     width: 250px;
     border-radius: 15px;
     overflow: hidden;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow);
     transition: transform 0.3s ease-in-out;
 }
 
@@ -29,13 +50,11 @@
     border-radius: 15px;
 }
 
-/* 🎵 Hover Effect ให้ Card */
 .song-card:hover {
     transform: scale(1.05);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.3);
 }
 
-/* 🎵 สร้าง Overlay สำหรับปุ่ม */
 .song-card .overlay {
     position: absolute;
     top: 0;
@@ -51,7 +70,6 @@
     justify-content: center;
 }
 
-/* 🎵 ปุ่มแสดงใน Overlay */
 .song-card:hover .overlay {
     opacity: 1;
 }
@@ -62,7 +80,7 @@
 }
 
 .song-card .btn {
-    background: #ff8a00;
+    background: var(--primary-color);
     color: white;
     padding: 8px 16px;
     border-radius: 8px;
@@ -72,22 +90,22 @@
 }
 
 .song-card .btn:hover {
-    background: #e52e71;
+    background: var(--secondary-color);
 }
 
-/* 🎵 ปรับ UI หน้า Profile */
+/* 🎵 Profile Page */
 .profile-container {
     max-width: 600px;
     margin: 0 auto;
     background: #fff;
     padding: 20px;
     border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--shadow);
 }
 
 .profile-container h1 {
     font-size: 28px;
-    color: #333;
+    color: var(--text-color);
     margin-bottom: 10px;
 }
 
@@ -101,7 +119,7 @@
 }
 
 .profile-container .btn-save {
-    background: #ff8a00;
+    background: var(--primary-color);
     color: white;
     padding: 10px 16px;
     border-radius: 8px;
@@ -110,10 +128,10 @@
 }
 
 .profile-container .btn-save:hover {
-    background: #e52e71;
+    background: var(--secondary-color);
 }
 
-/* 🎵 ปรับ UI Playlists */
+/* 🎵 Playlists */
 .playlist-container {
     margin-top: 20px;
 }
@@ -130,4 +148,15 @@
 .playlist-item:hover {
     transform: scale(1.02);
     background: #e9ecef;
+}
+
+/* 🎵 Responsive Design */
+@media (max-width: 768px) {
+    .sidebar-menu {
+        width: 100%;
+    }
+
+    .song-card {
+        width: 100%;
+    }
 }

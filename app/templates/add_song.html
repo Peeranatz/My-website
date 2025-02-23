@@ -1,19 +1,24 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Add Song</h1>
-<form method="POST">
-    {{ form.hidden_tag() }}
-    <div class="form-group">
-        {{ form.title.label }} {{ form.title(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.artist.label }} {{ form.artist(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.genre.label }} {{ form.genre(class="form-control") }}
-    </div>
-    <div class="form-group">
-        {{ form.submit(class="btn btn-primary") }}
-    </div>
-</form>
+<div class="container mt-4">
+    <h1 class="mb-4"><strong>Add Song</strong></h1>
+    <form method="POST">
+        {{ form.hidden_tag() }}
+        <div class="form-group mb-3">
+            {{ form.title.label(class="form-label") }}
+            {{ form.title(class="form-control", placeholder="Enter song title") }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form.artist.label(class="form-label") }}
+            {{ form.artist(class="form-control", placeholder="Enter artist name") }}
+        </div>
+        <div class="form-group mb-3">
+            {{ form.genre.label(class="form-label") }}
+            {{ form.genre(class="form-control", placeholder="Enter genre") }}
+        </div>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-primary w-100") }}
+        </div>
+    </form>
+</div>
 {% endblock %}
